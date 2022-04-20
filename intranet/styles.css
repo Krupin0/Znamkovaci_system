@@ -1,0 +1,82 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0px;
+    height: 100%;
+}
+table, tr, th, td{
+    border: 1px solid;
+}
+table{
+    border-collapse: collapse;
+}
+.content{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+}
+.infoPanel{
+    background-color: lightgray;
+    padding: 20px 25px;
+    height: 93,5%;
+}
+h2{
+    font-size: 20px;
+    margin: 0px;
+}
+h1{
+    margin: 5px 0px;
+}
+.infoPanel{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+a{
+    color: blue;
+    font-size: 18px;
+    text-decoration: none;
+}
+.znamky{
+    padding: 25px 30px;
+    margin-right: auto;
+}
+
+table p{
+    font-size: 12px;
+    margin: 2px;
+}
+.znamka{
+    width: 10%;    
+}
+button{
+    width: 35px;
+    height: 35px;
+    background-color: lightblue;
+    border: none;
+    font-size: 20px;
+}
+.vybrano{
+    border: 1px solid black;
+}
+.prumer{
+    color: blue;
+}
+.infoOZnamce{
+    background-color: lightgray;
+    padding: 20px 25px;
+    height: 93,5%;
+    width: 15%;
+}
+#pridatZnamkuInfo{
+    all: unset;
+}
+#datZnamku{
+    all: unset;
+}
+#pridatKategoriiInfo{
+    all: unset;
+}
+#pridatKategorii{
+    all: unset;
+}
