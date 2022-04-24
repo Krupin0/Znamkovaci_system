@@ -68,15 +68,16 @@ button{
     height: 93,5%;
     width: 15%;
 }
-#pridatZnamkuInfo{
-    all: unset;
+#pridatZnamkuInfo, #pridatKategoriiInfo, #datZnamku, #pridatKategorii, #odebratZnamku{
+    width: auto;
+    height: auto;
+    background-color: lightblue;
+    border: solid lightblue 1px;
+    font-size: 15px;
+    margin: 0px 5px;
+    border-radius: 5px;
 }
-#datZnamku{
-    all: unset;
-}
-#pridatKategoriiInfo{
-    all: unset;
-}
-#pridatKategorii{
-    all: unset;
+
+.skryt{
+    display: none;
 }

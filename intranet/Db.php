@@ -128,6 +128,22 @@ class Db{
         
         return($trida);
     }
+    public function getTridniSkupiny($nazevTridy){
+        $stmt = $this->connection->prepare("SELECT * FROM predmettridy WHERE predmettridy.skupinaZaku_idSkupiny = any(SELECT skupinazaku.idSkupiny FROM skupinazaku WHERE skupinazaku.trida_nazev = ?)");
+        if(!$stmt->execute([$nazevTridy]))
+            throw new Exception("Dotaz se neprovedl");
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        return($stmt->fetchAll());
+    }
+    public function getCisloSkupiny($id){
+        $stmt = $this->connection->prepare("SELECT skupinazaku.cisloSkupiny FROM skupinazaku WHERE skupinazaku.idSkupiny = ?");
+        if(!$stmt->execute([$id]))
+            throw new Exception("Dotaz se neprovedl");
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+        return($stmt->fetch()["cisloSkupiny"]);
+    }
 
     public function getKategorieZnamky($id){
         $stmt = $this->connection->prepare("SELECT * from kategorieZnamek WHERE kategorieZnamek.idKategorieZnamek = any (SELECT znamka.kategorieZnamek_idKategorieZnamek from znamka WHERE znamka.idZnamka = ?)");
@@ -162,7 +178,7 @@ class Db{
                 $vazeneZnamky[$key] = "";
             }
             else{
-                $vazeneZnamky[$key] = ($vynasobenaZnamka/$soucetVah);
+                $vazeneZnamky[$key] = round(($vynasobenaZnamka/$soucetVah), 2, PHP_ROUND_HALF_UP);
             }
         }
         return $vazeneZnamky;
@@ -220,5 +236,20 @@ class Db{
             throw new Exception("Dotaz se neprovedl");
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         return $stmt->fetch()["ucitel_ucet_idLogin"];
+    }
+    public function poslatZnamku($znamka, $datum, $zakId, $kategorieId, $predmetTridyId, $latka){
+        $stmt = $this->connection->prepare("INSERT INTO znamka VALUES(null, ?, ?, ?, ?, ?, ?)");
+        if(!$stmt->execute([$znamka, $datum ,$zakId, $kategorieId, $predmetTridyId, $latka]))
+            throw new Exception("Dotaz se neprovedl");
+    }
+    public function poslatKategorii(int $vaha, string $nazev, int $ucitel, int $predmetTridy){
+        $stmt = $this->connection->prepare("INSERT INTO kategorieZnamek VALUES(null, ?, ?, ?, ?)");
+        if(!$stmt->execute([$vaha, $nazev, $ucitel, $predmetTridy]))
+            throw new Exception("Dotaz se neprovedl");
+    }
+    public function odebratZnamku($idZnamka){
+        $stmt = $this->connection->prepare("DELETE FROM znamka WHERE znamka.idZnamka=?");
+        if(!$stmt->execute([$idZnamka]))
+            throw new Exception("Dotaz se neprovedl");
     }
 }

@@ -1,6 +1,6 @@
 <?php
-    require_once("Db.php");
     session_start();
+    require_once("Db.php");
     $db = new Db();
 
     $_SESSION["err"] = "";
@@ -18,7 +18,6 @@
     else if($info["role"] == "Učitel"){
         $skupiny=$db->getSkupinyUcitele($info["id"]);
     }
-    #kontrola vstupu, next na tlacitko, custom datum, styly, odeslat znamky/kategorie, auto update pri odeslani
 ?>
 <html>
 <head>
@@ -46,14 +45,19 @@
             <?php if($info["role"] == "Učitel"){
                 echo("<select onchange=\"zobrazitStudenty();smazatInfo()\" name=\"tridy\" id=\"tridy\">");
                    foreach($skupiny as $skupina){
+                       if($skupina["idPredmetTridy"] == ""){
+                            $skupina["idPredmetTridy"] = "trida".$skupina["trida_nazev"];
+                       }
                        echo("<option value=".$skupina["idPredmetTridy"].">".$skupina["predmet_zkratka"]."-".$skupina["trida_nazev"]."(skupina ".$skupina["cisloSkupiny"].")</option>");
                    }
                 echo("</select>");
                 echo("<button id=\"pridatZnamkuInfo\" onclick=\"pridatZnamku()\">Přidat známku</button>");
                 echo("<button id=\"pridatKategoriiInfo\" onclick=\"pridatKategorii()\">Přidat kategorii</button>");
+                echo("<button id=\"odebratZnamku\" onclick=\"odebratZnamku()\">OdebratZnamku</button>");
             }
             ?>
-            
+            <div id="tridniSelect"></div>
+
             <table>
                 <?php if($info["role"] == "Žák"){
                     foreach($znamky as $key=>$value) :?>
@@ -96,19 +100,53 @@
         }
         function zobrazitStudenty(){
             select = document.getElementById("tridy");
-            if(select.value != ""){
+            console.log(select.value);
+            
                 var xmlhttp = new XMLHttpRequest();
                 xmlhttp.open("POST", "zobrazitStudenty.php", true);
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp.onreadystatechange = function(){
                     if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
-                        document.getElementsByTagName("table")[0].innerHTML =  xmlhttp.responseText;
+                        if(xmlhttp.responseText.startsWith("<s")){
+                            var mySelect = xmlhttp.responseText;
+                            document.getElementById("tridniSelect").innerHTML = xmlhttp.responseText;
+                            document.getElementById("pridatZnamkuInfo").classList.add("skryt");
+                            document.getElementById("pridatKategoriiInfo").classList.add("skryt");
+                            document.getElementById("odebratZnamku").classList.add("skryt");
+                            zobrazitStudentyTridni();
+                        }
+                        else{
+                            document.getElementsByTagName("table")[0].innerHTML =  xmlhttp.responseText;
+                            document.getElementById("odebratZnamku").classList.remove("skryt");
+                            document.getElementById("pridatZnamkuInfo").classList.remove("skryt");
+                            document.getElementById("pridatKategoriiInfo").classList.remove("skryt");
+                            if(document.getElementById("tridyTridni") != null){
+                                document.getElementById("tridyTridni").classList.add("skryt");
+                            }
+                        }
+                        
+                        //console.log(xmlhttp.responseText);
                     }
                 }
-                xmlhttp.send("id="+select.value);
-                console.log(select.value);   
-            }
+                xmlhttp.send("id="+select.value);  
         }
+        function zobrazitStudentyTridni(){
+            select = document.getElementById("tridyTridni");
+            console.log(select.value);
+            
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "zobrazitStudenty.php", true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xmlhttp.onreadystatechange = function(){
+                    if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+                            document.getElementsByTagName("table")[0].innerHTML =  xmlhttp.responseText;
+                        }
+                        
+                        //console.log(xmlhttp.responseText);
+                    }
+                xmlhttp.send("id="+select.value);  
+        }
+            
         function pridatZnamku(){
             select = document.getElementById("tridy");
             console.log("plus znamka");
@@ -161,7 +199,8 @@
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp.onreadystatechange = function(){
                     if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
-                        document.getElementById("text").innerHTML =  xmlhttp.responseText;
+                        //document.getElementById("text").innerHTML =  xmlhttp.responseText;
+                        zobrazitStudenty();
                     }
                 }
                 xmlhttp.send("znamka="+znamka+ "&datum="+datum+"&zakId="+zakId+"&kategorieId="+kategorieId+"&predmetTridy="+predmetTridy+"&latka="+latka);
@@ -179,11 +218,30 @@
                 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
                 xmlhttp.onreadystatechange = function(){
                     if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
-                        document.getElementById("text").innerHTML =  xmlhttp.responseText;
+                        //document.getElementById("text").innerHTML =  xmlhttp.responseText;
+                        pridatKategorii();
+                        location.reload();
+                        
                     }
                 }
                 xmlhttp.send("vaha="+vaha+ "&nazev="+nazev+"&predmetTridy="+ucitel_predmettridyid);
             }
+        }
+        function odebratZnamku(){
+            if(document.getElementsByClassName("vybrano")[0] != null){
+                //console.log(document.getElementsByClassName("vybrano")[0].id);
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.open("POST", "odebratZnamku.php", true);
+                xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                xmlhttp.onreadystatechange = function(){
+                    if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+                        console.log("odstraněno");
+                        zobrazitStudenty();
+                    }
+                }
+                xmlhttp.send("id="+document.getElementsByClassName("vybrano")[0].id);
+            }
+            
         }
    </script>
 </body>
