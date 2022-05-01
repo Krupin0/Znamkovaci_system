@@ -8,20 +8,22 @@ class Db{
     }
 
     public function userExists(string $login){
-        $stmt = $this->connection->query('SELECT ucet.login FROM ucet');
-        while($row = $stmt->fetch()["login"]){
-            if($login == $row){
-                return true;
-                exit;
-            }
-            #var_dump($row);
+        $stmt = $this->connection->prepare("SELECT * FROM ucet WHERE ucet.login = ?");
+        if(!$stmt->execute([$login]))
+            throw new Exception("Dotaz se neprovedl");
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        if($stmt->fetch() == ""){
+            return false;
         }
-        return false;
+        else{
+            return true;
+        }
     }
 
     public function getPassword(string $login){
         $stmt = $this->connection->prepare("SELECT ucet.heslo FROM ucet WHERE ucet.login = ?");
-        $stmt->execute([$login]);
+        if(!$stmt->execute([$login]))
+            throw new Exception("Dotaz se neprovedl");
         return $stmt->fetch()["heslo"];
     }
 
@@ -57,15 +59,6 @@ class Db{
         return array("jmeno"=>$jmeno, "prijmeni"=>$prijmeni, "role"=>$role, "trida"=>$trida, "id"=>$id);
     }
 
-    public function getZnamkyZak($id){
-        $stmt = $this->connection->prepare("SELECT * FROM znamka WHERE znamka.zak_ucet_idLogin = ?");
-        if(!$stmt->execute([$id]))
-            throw new Exception("Dotaz se neprovedl");
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        
-        $znamky = $stmt->fetchAll();
-        var_dump($znamky);
-    }
 
     public function getZnamkyZakPredmet($id){
         $predmety = Db::getPredmetyZaka($id);

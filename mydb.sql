@@ -44,23 +44,6 @@ CREATE TABLE IF NOT EXISTS `kategorieznamek` (
 -- Vypisuji data pro tabulku `kategorieznamek`
 --
 
-INSERT INTO `kategorieznamek` (`idKategorieZnamek`, `vaha`, `nazev`, `ucitel_ucet_idLogin`, `predmetTridy_idpredmetTridy`) VALUES
-(1, 10, 'písemka', 16, 5),
-(2, 6, 'test', 17, 11),
-(3, 3, 'zkoušení', 18, 15),
-(4, 2, 'projekt', 19, 24),
-(5, 5, 'úkol', 20, 9),
-(6, 1, 'písemka', 16, 1),
-(7, 2, 'test', 17, 2),
-(8, 5, 'zkoušení', 19, 4),
-(9, 6, 'projekt', 16, 5),
-(10, 8, 'úkol', 18, 7),
-(11, 10, 'písemka', 20, 8),
-(12, 6, 'test', 17, 2),
-(13, 7, 'test', 16, 5),
-(14, 10, 'aktivitka', 16, 5),
-(15, 5, 'xd', 16, 13),
-(16, 1, 'testxd', 16, 1);
 
 -- --------------------------------------------------------
 
@@ -380,23 +363,6 @@ CREATE TABLE IF NOT EXISTS `znamka` (
 -- Vypisuji data pro tabulku `znamka`
 --
 
-INSERT INTO `znamka` (`idZnamka`, `znamka`, `datum`, `zak_ucet_idLogin`, `kategorieZnamek_idKategorieZnamek`, `predmetTridy_idpredmetTridy`, `poznamka`) VALUES
-(1, '2', '2022-04-04', 1, 6, 1, 'pozn1'),
-(2, '3', '2022-04-05', 1, 7, 2, 'pozn2'),
-(3, '4', '2022-04-06', 1, 12, 2, 'pozn3'),
-(4, '1', '2022-04-07', 2, 8, 4, 'pozn4'),
-(5, '3', '2022-04-08', 2, 1, 5, 'pozn5'),
-(6, '5', '2022-04-09', 2, 13, 5, 'pozn6'),
-(7, '1', '2022-04-10', 3, 10, 7, 'pozn7'),
-(8, '2', '2022-04-11', 3, 11, 8, 'pozn8'),
-(9, '1', '2022-04-12', 4, 7, 2, 'pozn9'),
-(10, '2', '2022-04-04', 1, 6, 1, 'pozn1'),
-(11, '2', '2022-04-03', 1, 8, 4, 'xd'),
-(12, '5', '2022-04-03', 2, 14, 13, 'xd'),
-(13, '1', '2022-04-21', 13, 6, 1, 'test'),
-(14, '1', '2022-04-21', 4, 6, 1, 'test'),
-(15, '3', '2022-04-21', 10, 16, 1, ''),
-(16, '1', '2022-04-21', 1, 1, 5, '');
 
 --
 -- Omezení pro exportované tabulky

@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <?php
-    require_once("Db.php");
     session_start();
-    $databaze = new Db(); 
 ?>
 <phtml>
 <head>
