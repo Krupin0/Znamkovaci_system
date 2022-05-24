@@ -69,7 +69,7 @@ button{
     height: 93,5%;
     width: 15%;
 }
-#pridatZnamkuInfo, #pridatKategoriiInfo, #datZnamku, #pridatKategorii, #odebratZnamku{
+#pridatZnamkuInfo, #pridatKategoriiInfo, #datZnamku, #pridatKategorii, #odebratZnamku, #csvExport, #jsonExport{
     width: auto;
     height: auto;
     background-color: lightblue;

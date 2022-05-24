@@ -10,6 +10,7 @@
     }
 
     $info = $db->getBasicInfo($_SESSION["login"]);
+    $_SESSION["role"] = $info["role"];
 
     if($info["role"] == "Žák"){
         $znamky = $db->getZnamkyZakPredmet($info["id"]);
@@ -55,6 +56,8 @@
                 echo("<button id=\"pridatKategoriiInfo\" onclick=\"pridatKategorii()\">Přidat kategorii</button>");
                 echo("<button id=\"odebratZnamku\" onclick=\"odebratZnamku()\">OdebratZnamku</button>");
             }
+            echo("<button id=\"csvExport\" onclick=\"csvExport()\">Exportovat do CSV</button>");
+            echo("<button id=\"jsonExport\" onclick=\"jsonExport()\">Exportovat do JSON</button>");
             ?>
             <div id="tridniSelect"></div>
 

@@ -1,6 +1,7 @@
 <?php
     require_once("Db.php");
     $db = new Db();
+    session_start();
     function str_starts_with ( $haystack, $needle ) {
         return strpos( $haystack , $needle ) === 0;
     }
@@ -16,6 +17,7 @@
         
     }
     else{
+        $_SESSION["tridniTrida"] = $_POST["id"];
         $idZaku = $db->getZaciSKupiny($_POST["id"]);
         $zkratka = $db->getZkratka($_POST["id"]);
         $zaci = [];
