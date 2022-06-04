@@ -245,4 +245,18 @@ class Db{
         if(!$stmt->execute([$idZnamka]))
             throw new Exception("Dotaz se neprovedl");
     }
+    public function exportCsvZak($logZak){
+        $stmt = $this->connection->prepare("SELECT znamka.znamka, znamka.datum, znamka.poznamka, kategorieznamek.nazev, ucet.jmeno, ucet.prijmeni, kategorieznamek.vaha, predmettridy.predmet_zkratka FROM znamka, kategorieznamek, ucet, predmettridy WHERE znamka.zak_ucet_idLogin = (SELECT zak.ucet_idLogin FROM zak, ucet WHERE ucet.idLogin = zak.ucet_idLogin AND ucet.login = ?) AND kategorieznamek.idKategorieZnamek = znamka.kategorieZnamek_idKategorieZnamek AND kategorieznamek.ucitel_ucet_idLogin = ucet.idLogin AND predmetTridy.idpredmetTridy = znamka.predmetTridy_idpredmetTridy GROUP BY znamka.idZnamka ORDER BY predmettridy.predmet_zkratka, znamka.datum");
+        if(!$stmt->execute([$logZak]))
+            throw new Exception("Dotaz se neprovedl");
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
+    }   
+    public function exportCsvUcitel($predmetTridy){
+        $stmt = $this->connection->prepare("SELECT ucet.jmeno AS \"zak_jmeno\", ucet.prijmeni AS \"zak_prijmeni\", znamka.znamka AS \"znamka\", znamka.datum AS \"datum\", znamka.poznamka AS \"latka\", kategorieznamek.vaha AS \"vaha\", kategorieznamek.nazev AS \"kategorie\", (SELECT ucet.jmeno FROM ucet WHERE predmettridy.ucitel_ucet_idLogin = ucet.idLogin) AS \"ucitel_jmeno\", (SELECT ucet.prijmeni FROM ucet WHERE predmettridy.ucitel_ucet_idLogin = ucet.idLogin) AS \"ucitel_prijmeni\" FROM ucet, znamka, kategorieznamek, predmettridy WHERE predmettridy.idpredmetTridy = znamka.predmetTridy_idpredmetTridy AND znamka.kategorieZnamek_idKategorieZnamek = kategorieznamek.idKategorieZnamek AND ucet.idLogin = znamka.zak_ucet_idLogin AND predmetTridy.idpredmetTridy = ? GROUP BY znamka.idZnamka ORDER BY ucet.prijmeni, znamka.datum");
+        if(!$stmt->execute([$predmetTridy]))
+            throw new Exception("Dotaz se neprovedl");
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
+    }  
 }
